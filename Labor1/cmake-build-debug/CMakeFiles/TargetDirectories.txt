@@ -1,0 +1,3 @@
+C:/-Facultate UBB info/Sem II/DSA/Labor1/cmake-build-debug/CMakeFiles/Labor1.dir
+C:/-Facultate UBB info/Sem II/DSA/Labor1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/-Facultate UBB info/Sem II/DSA/Labor1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
