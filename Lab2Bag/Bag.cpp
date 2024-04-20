@@ -10,29 +10,16 @@ using namespace std;
 Bag::Bag() {
     this->head = nullptr;
     this->tail = nullptr;
-    this->sizeOfBag = 0;
+    //this->sizeOfBag = 0;
 }
 
 //Complexity:
 // - Best Case: theta(1)
 // - Worst Case: theta(n)
 // - Average Case: theta(n)
+// - General Case: O(n)
 void Bag::add(TElem elem) {
- /*   DLLNode* n = nullptr;
-    n = new DLLNode;
-    n->element = elem;
-    if (this->tail == nullptr) { //if we don't have an end
-        if (this->head == nullptr) { //if we dont have a start
-            this->head = n; //set the start to n
-        }
-        this->tail = n; //set the end to n
-    }
-    else {
-        this->tail->next = n; //our bag's end's next node equals n;
-        n->prev = this->tail; //n's previous equals our current tail
-        this->tail = this->tail->next; //our tail equals n
-    }
-}*/if(this->head == nullptr) {
+    if(this->head == nullptr) {
         // If the bag is empty, add the element to the bag
         // and set the head and tail to the new node
         auto* newNode = new DLLNode;
@@ -43,7 +30,7 @@ void Bag::add(TElem elem) {
 
         this->head = newNode;
         this->tail = newNode;
-        this->sizeOfBag++;
+        //this->sizeOfBag++;
     }else{
         // Search for the element in the bag
         // If it is found, increase the frequency
@@ -51,7 +38,7 @@ void Bag::add(TElem elem) {
         while (currentNode != nullptr) {
             if (currentNode->element == elem) {
                 currentNode->frequenz++;
-                this->sizeOfBag++;
+                //this->sizeOfBag++;
                 return;
             }
             currentNode = currentNode->next;
@@ -67,7 +54,7 @@ void Bag::add(TElem elem) {
 
         this->tail->next = newNode;
         this->tail = newNode;
-        this->sizeOfBag++;
+        //this->sizeOfBag++;
     }
 }
 
@@ -75,6 +62,7 @@ void Bag::add(TElem elem) {
 // - Best Case: theta(1)
 // - Worst Case: theta(n)
 // - Average Case: theta(n)
+// - General Case: O(n)
 bool Bag::remove(TElem elem){
     if(this->head == nullptr) {
         return false;
@@ -85,30 +73,30 @@ bool Bag::remove(TElem elem){
         if (currentNode->element == elem) {
             if (currentNode->frequenz > 1) {
                 currentNode->frequenz--;
-                this->sizeOfBag--;
+                //this->sizeOfBag--;
                 return true;
             }else{
                 if (currentNode == this->head) {
                     this->head = currentNode->next;
-                    if (this->head != nullptr) {
+                    if (this->head != nullptr) {//lista goala,ar da eroare ca am accesa prev de la o lista goala
                         this->head->prev = nullptr;
                     }
                     delete currentNode;
-                    this->sizeOfBag--;
+                    //this->sizeOfBag--;
                     return true;
                 }else if (currentNode == this->tail) {
                     this->tail = currentNode->prev;
-                    if (this->tail != nullptr) {
+                    if (this->tail != nullptr) {//lista goala
                         this->tail->next = nullptr;
                     }
                     delete currentNode;
-                    this->sizeOfBag--;
+                    //this->sizeOfBag--;
                     return true;
                 }else{
-                    currentNode->prev->next = currentNode->next;
-                    currentNode->next->prev = currentNode->prev;
+                    currentNode->prev->next = currentNode->next;// Această linie de cod actualizează pointerul next al nodului anterior la currentNode astfel încât să pointeze către nodul următor al lui currentNode
+                    currentNode->next->prev = currentNode->prev;// Această linie de cod actualizează pointerul prev al nodului următor la currentNode astfel încât să pointeze către nodul anterior al lui currentNode
                     delete currentNode;
-                    this->sizeOfBag--;
+                    //this->sizeOfBag--;
                     return true;
                 }
             }
@@ -117,57 +105,12 @@ bool Bag::remove(TElem elem){
     }
     return false;
 }
-/* {
-    if (this->head == nullptr||this->tail==nullptr) return false; //if we have no elements
-    DLLNode* traverser = this->head; //our starting point is our bag's starting point
-    while (true) {
-        if (traverser->element == elem) { //if we found our element
-            DLLNode* last = traverser->prev; //the element before ours
-            DLLNode* succ = traverser->next; //the element after ours
-            last->next = succ; //put the element before our's 's next element to the element after our's
-            succ->prev = last; //set the element after our's 's previous element to the element before our's
-            delete traverser; //delete our element
-            return true;
-        }
-        else
-        if (traverser->next == nullptr) return false; //If we reached the end
-        else traverser = traverser->next; //move forward
-    }
-	//return false;
-}
-
-{
-    if (this->head == nullptr) return false; // Dacă sacul este gol, nu putem elimina nimic
-
-    DLLNode* traverser = this->head; // Inițializăm traverser la începutul sacului
-    while (traverser != nullptr) {
-        if (traverser->element == elem) { // Dacă am găsit elementul de eliminat
-            if (traverser == this->head) { // Dacă elementul de eliminat este primul din sac
-                this->head = traverser->next; // Actualizăm head la următorul element
-                if (this->head != nullptr) {
-                    this->head->prev = nullptr; // Dacă există un următor element, actualizăm prev-ul lui
-                } else {
-                    this->tail = nullptr; // Dacă nu există următor element, actualizăm și tail-ul la nullptr
-                }
-            } else if (traverser == this->tail) { // Dacă elementul de eliminat este ultimul din sac
-                this->tail = traverser->prev; // Actualizăm tail la elementul anterior
-                this->tail->next = nullptr; // Actualizăm next-ul elementului anterior la nullptr
-            } else { // Dacă elementul de eliminat este în mijlocul sacului
-                traverser->prev->next = traverser->next; // Actualizăm next-ul elementului anterior
-                traverser->next->prev = traverser->prev; // Actualizăm prev-ul elementului următor
-            }
-            delete traverser; // Eliberăm memoria ocupată de elementul eliminat
-            return true; // Returnăm true dacă am reușit să eliminăm elementul
-        }
-        traverser = traverser->next; // Trecem la următorul element din sac
-    }
-    return false; // Dacă nu am găsit elementul de eliminat, returnăm false
-}*/
 
 //Complexity:
 // - Best Case: theta(1)
 // - Worst Case: theta(n)
 // - Average Case: theta(n)
+// - General Case: O(n)
 bool Bag::search(TElem elem) const {
     if(this->head == nullptr) {
         return false;
@@ -183,22 +126,12 @@ bool Bag::search(TElem elem) const {
 
     return false;
 }
-    /*
-    DLLNode* traverser = this->head; // Start from the beginning of the bag
-    while (traverser != nullptr) {
-        if (traverser->element == elem) {
-            // Found the element in the bag
-            return true;
-        }
-        traverser = traverser->next; // Move to the next node
-    }
-    // Element not found
-    return false;
-}*/
+
 //Complexity:
 // - Best Case: theta(1)
 // - Worst Case: theta(n)
 // - Average Case: theta(n)
+// - General Case: O(n)
 int Bag::nrOccurrences(TElem elem) const {
         if(this->head == nullptr) {
             return 0;
@@ -214,40 +147,32 @@ int Bag::nrOccurrences(TElem elem) const {
 
         return 0;
     }
-   /* int count = 0;
-    DLLNode* traverser = this->head; // Start from the beginning of the bag
-    while (traverser != nullptr) {
-        if (traverser->element == elem) {
-            // Found an occurrence of the element
-            count++;
-        }
-        traverser = traverser->next; // Move to the next node
-    }
-    return count;*/
 
-	//return 0;
-
-//Complexity: theta(1)
-//Best Case == Worst Case == Average Case == theta(1)
+//Complexity:
+//Best Case == Worst Case == Average Case == theta(1) or
+//Best Case == Worst Case == Average Case == theta(n)
 int Bag::size() const {
-    return this->sizeOfBag;
-    /*int count = 0;
-    DLLNode* traverser = this->head; // Start from the beginning of the bag
-    while (traverser != nullptr) {
-        count++; // Increment the count for each node
-        traverser = traverser->next; // Move to the next node
+    //return this->sizeOfBag;
+    int count = 0;
+    DLLNode* currentNode = this->head;
+    if (currentNode == nullptr) {
+        return 0; // Bag is empty
+    }else{
+        while (currentNode != nullptr) {
+            count = count + currentNode->frequenz; // Increment the count for each node
+            currentNode = currentNode->next; // Move to the next node
+        }
     }
-    return count;*/
 
-	//return 0;
+    return count;
+
 }
 
 //Complexity: theta(1)
 //Best Case == Worst Case == Average Case == theta(1)
 bool Bag::isEmpty() const {
-    return this->sizeOfBag == 0;
-    //return (this->head == nullptr);
-	//return 0;
+    //return this->sizeOfBag == 0;
+    return this->size()==0;
 }
 //Complexity: theta(1)
 //Best Case == Worst Case == Average Case == theta(1)
@@ -265,14 +190,43 @@ Bag::~Bag() {
     }
     delete currentNode;
 }
-    // Traverse the linked list and delete each node
-   /* while (this->head != nullptr) {
-        DLLNode* temp = this->head; // Store the current head
-        this->head = this->head->next; // Move to the next node
-        delete temp; // Deallocate memory for the current node
+
+//Complexity:
+//Best Case == Worst Case == Average Case == theta(n)
+void Bag::reverse() {
+    // If the list is empty return
+    if (this->head == nullptr) {
+        return;
     }
-    // Set tail to nullptr (optional, but good practice)
-    this->tail = nullptr;*/
+    DLLNode* aux = nullptr;
+    DLLNode* current = this->head;
+// swap next and prev for all nodes of linked list
+    while (current != nullptr) {
+        aux = current->prev;
+        current->prev = current->next;
+        current->next = aux;
+        current = current->prev;
+}
+    this->head = aux->prev;
+    this->tail = aux;
+}
+/*
+  function reverse()
+        if(dll.head=NIL)
+            return
+        end-if
+        newNode aux<- allocate()
+        newNode current<- allocate()
+        current<-dll.head
+        while(current!=NIL) execute
+            aux<-current.prev
+            current.prev<-current.next
+            current.next<-aux
+            current<-current.prev
+        end-while
+        dll.head<-aux.prev
+        dll.tail<-aux
+  end-function
 
-
+ */
 

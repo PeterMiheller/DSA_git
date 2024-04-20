@@ -7,17 +7,9 @@ class BagIterator
 	
 private:
 	const Bag& bag;
-    /*struct DLLNode {
-        TElem element;
-        TElem frequenz;
-        DLLNode* prev;
-        DLLNode* next;
-    };*/
-    //DLLNode* current_node;
     Bag::DLLNode* current_node;
-    //Bag::DLLNode* head;
-    //Bag::DLLNode* tail;
-    int currentFrequency;
+    TElem currentFrequency;
+
     BagIterator(const Bag& c);
 public:
 	void first();

@@ -5,8 +5,7 @@
 using namespace std;
 
 //Complexity: theta(1)
-BagIterator::BagIterator(const Bag& c): bag(c)
-{
+BagIterator::BagIterator(const Bag& c): bag(c){
     // Initialize the iterator to the beginning (head) of the bag
     //this->current_node = nullptr;
     this->current_node = c.head;
@@ -20,22 +19,15 @@ void BagIterator::first() {
 
 //Complexity: theta(1)
 void BagIterator::next() {
-    /*if (valid()) {
-        // Move to the next node
-        this->current_node = this->current_node->next;
-    }else
+    if (!valid()) {
         throw exception();
-}*/
-if (this->current_node == nullptr) {
-    throw exception();
-}else{
-if (this->currentFrequency < this->current_node->frequenz) {
-    this->currentFrequency++;
-}else{
-    this->current_node = this->current_node->next;
-    this->currentFrequency = 1;
+    }else{
+        if (this->currentFrequency < this->current_node->frequenz) {
+            this->currentFrequency++;
+        }else{
+            this->current_node = this->current_node->next;
+            this->currentFrequency = 1;}
     }
-}
 }
 
 //Complexity: theta(1)
@@ -49,13 +41,11 @@ bool BagIterator::valid() const {
 
 
 //Complexity: theta(1)
-TElem BagIterator::getCurrent() const
-{
-    if (valid()) {
+TElem BagIterator::getCurrent() const{
+    if (!valid()) {
+        throw exception();
+    }else
         // Return the element at the current position
         return this->current_node->element;
-    }else
-        throw exception();
-    // If the iterator is not valid, return a special value (e.g., NULL_TELEM)
-	return NULL_TELEM
+
 }

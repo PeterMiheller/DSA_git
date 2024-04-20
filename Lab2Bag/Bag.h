@@ -18,7 +18,7 @@ private:
 
     DLLNode* head;
     DLLNode* tail;
-    TElem sizeOfBag;
+    //TElem sizeOfBag;
 
 
 
@@ -52,5 +52,7 @@ public:
 
 	//destructor
 	~Bag();
+
+    void reverse();
 
 };
