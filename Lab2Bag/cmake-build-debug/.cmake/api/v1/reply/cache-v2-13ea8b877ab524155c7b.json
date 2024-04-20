@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/-Facultate UBB info/Sem II/DSA/Lab2Bag/cmake-build-debug"
+			"value" : "c:/-Facultate UBB info/DSA_git/Lab2Bag/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -575,7 +575,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/-Facultate UBB info/Sem II/DSA/Lab2Bag/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/-Facultate UBB info/DSA_git/Lab2Bag/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -647,7 +647,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/-Facultate UBB info/Sem II/DSA/Lab2Bag"
+			"value" : "C:/-Facultate UBB info/DSA_git/Lab2Bag"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1279,7 +1279,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/-Facultate UBB info/Sem II/DSA/Lab2Bag/cmake-build-debug"
+			"value" : "C:/-Facultate UBB info/DSA_git/Lab2Bag/cmake-build-debug"
 		},
 		{
 			"name" : "Lab2Bag_IS_TOP_LEVEL",
@@ -1303,7 +1303,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/-Facultate UBB info/Sem II/DSA/Lab2Bag"
+			"value" : "C:/-Facultate UBB info/DSA_git/Lab2Bag"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

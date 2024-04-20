@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/-Facultate UBB info/Sem II/DSA/Lab2Bag/cmake-build-debug",
-		"source" : "C:/-Facultate UBB info/Sem II/DSA/Lab2Bag"
+		"build" : "C:/-Facultate UBB info/DSA_git/Lab2Bag/cmake-build-debug",
+		"source" : "C:/-Facultate UBB info/DSA_git/Lab2Bag"
 	},
 	"version" : 
 	{
