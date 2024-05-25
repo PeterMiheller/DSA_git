@@ -6,7 +6,7 @@ using namespace std;
 
 SetIterator::SetIterator(const Set& m) : set(m)
 {
-	//TODO - Implementation
+    //TODO - Implementation
     //Complexity:
     //- Best Case: Theta(1)
     //- Worst Case: Theta(n)
@@ -18,7 +18,7 @@ SetIterator::SetIterator(const Set& m) : set(m)
 
 
 void SetIterator::first() {
-	//TODO - Implementation
+    //TODO - Implementation
     //Complexity:
     //- Best Case: Theta(1)
     //- Worst Case: Theta(n)
@@ -30,7 +30,7 @@ void SetIterator::first() {
 
 
 void SetIterator::next() {
-	//TODO - Implementation
+    //TODO - Implementation
     //Complexity:
     //- Best Case: Theta(1)
     //- Worst Case: Theta(n)
@@ -45,7 +45,7 @@ void SetIterator::next() {
 
 TElem SetIterator::getCurrent()
 {
-	//TODO - Implementation
+    //TODO - Implementation
     //Complexity:
     //Theta(1)
     if(!valid())
@@ -55,10 +55,10 @@ TElem SetIterator::getCurrent()
 }
 
 bool SetIterator::valid() const {
-	//TODO - Implementation
+    //TODO - Implementation
     //Complexity:
     //Theta(1)
-    if(this->current < this->set.capacity && this->current >= 0)
+    if(this->current < this->set.capacity && this->set.elements[this->current] != NULL_TELEM)
         return true;
     return false;
 

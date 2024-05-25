@@ -12,7 +12,7 @@ Set::Set() {
     this->capacity = 100;
     this->elements = new TElem[this->capacity];
     this->next = new int[this->capacity];
-    for (int i = 0; i < this->capacity; i++) {
+    for (int i = 0; i < this->capacity ; i++) {
         this->elements[i] = NULL_TELEM;
         this->next[i] = -1;
     }
@@ -24,9 +24,9 @@ Set::Set() {
 bool Set::add(TElem elem) {
     //TODO - Implementation
     //Complexity:
-    //- Best Case: Theta(1) - If the element is added to the first empty slot.
-    //- Worst Case: Theta(capacity)  the element might need to be added to the end of a long linked list with the same hash value.
-    //- Average Case: Theta(1) Assuming a good hash function distributes elements evenly.
+    //- Best Case: Theta(1) - If the hash of the element is added to the first empty slot.
+    //- Worst Case: Theta(capacity)-If the element need to be added to the end of a long linked list with the same hash value.
+    //- Average Case: Theta(1) -Assuming a good hash function distributes elements evenly.
     //- General Case: O(capacity)
 
     //If the first empty is equal with the capacity, it does resize.
@@ -34,7 +34,7 @@ bool Set::add(TElem elem) {
         resize();
 
     int i = hash(elem);
-    // If the element's hash value is max, it means that the element is not in the set.
+    // If the element's hash value is NULL_TELEM, it means that the element is not in the set, because the position is free.
     // The element is added to the elements array of the first free position.
     if (this->elements[i] == NULL_TELEM) {
         this->elements[i] = elem;
@@ -73,35 +73,29 @@ bool Set::remove(TElem elem) {
     //TODO - Implementation
     //Complexity:
     //- Best Case: Theta(1)- If the element is the first element with a particular hash value.
-    //- Worst Case: Theta(capacity)- Similar to add, in the worst case, iterating through a long linked list.
-    //- Average Case: Theta(capacity)
+    //- Worst Case: Theta(capacity) -when iterating through a long linked list.
+    //- Average Case: Theta(1)
     //- General Case: O(capacity)
 
     int i = hash(elem);
     int j = -1;
-    /*int i=this->hash(elem);
-   int j=-1;
-   int I=0;
-   while(I<this->capacity && j==-1){
-       if(this->next[I]==i){
-           j=I;
-       }
-       I++;
-   }*/
+    //search the element in the set
     while (i != -1 && this->elements[i] != elem) {
         j = i;
         i = this->next[i];
     }
 
-
+    //if not found return false
     if (i == -1) {
         return false;
     } else {
+        //While the element to be removed has a next element, we replace it with the next element.
+        //If the element to be removed doesn't have a next element,we replace it with the last element.
         bool checked = false;
         do {
             int current = this->next[i];
             int previous = i;
-
+            // We find the next element with the same hash
             while (current != -1 && hash(this->elements[current]) != i) {
                 previous = current;
                 current = this->next[current];
@@ -110,21 +104,20 @@ bool Set::remove(TElem elem) {
             if (current == -1) {
                 checked = true;
             } else {
+                // We put instead of the removed element the next element with the same hash
                 this->elements[i] = this->elements[current];
                 i = current;
                 j = previous;
             }
         } while (!checked);
-        //While the element to be removed has a next element, we replace it with the next element.
-        //
-        //If the element to be removed doesn't have a next element,we replace it with the last element.
-        //
 
+        // If the element to be removed doesn't have a next element, we replace it with the last element that means -1.
         if (j != -1) {
             this->next[j] = this->next[i];
         }
         this->elements[i] = NULL_TELEM;
         this->next[i] = -1;
+        //if i is smaller than firsteEmpty, we change it
         if (i < this->firstEmpty) {
             this->firstEmpty = i;
         }
@@ -138,27 +131,13 @@ bool Set::search(TElem elem) const {
     //TODO - Implementation
     //Complexity:
     //- Best Case: Theta(1) - If the element is the first element with a particular hash value.
-    //- Worst Case: Theta(capacity)- Similar to add and remove, in the worst case, iterating through a long linked list.
+    //- Worst Case: Theta(capacity)-when iterating through a long linked list.
     //- Average Case: Theta(1)
     //- General Case: O(capacity)
     //It uses the hash function to find the position of the element, and then
     // it searches for the element in the list of elements with the same hash.
 
     int i = hash(elem);
-    /*  if (elements[i] == elem)
-      {
-          return true;
-      }
-
-      while (i != -1)
-      {
-          if (elements[i] == elem)
-              return true;
-          i = next[i];
-      }
-
-      return false;
-  }*/
     while (i != -1 && this->elements[i] != elem) {
         i = this->next[i];
     }
@@ -213,9 +192,9 @@ int Set::hash(TElem e) const {
 
 void Set::resize() {
     //Complexity:
-    //- Best Case: Theta(capacity)- If the elements are already spread out evenly.
-    //- Worst Case: Theta(capacity)- In the worst case, all elements might need to be rehashed.
-    //- Average Case: Theta(capacity)- Assuming a good hash function, rehashing should take constant time per element on average.
+    //- Best Case: Theta(capacity)
+    //- Worst Case: Theta(capacity)- In the worst case, all elements might need to be rehashed on the same position.
+    //- Average Case: Theta(capacity)
     //- General Case: O(capacity)
     // Step 1: Copy the existing elements to a temporary array
     auto *old = new TElem[this->nrOfElements];
@@ -251,5 +230,3 @@ void Set::resize() {
     }
     delete[] old;
 }
-
-
