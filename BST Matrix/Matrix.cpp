@@ -5,6 +5,9 @@ using namespace std;
 ///Theta(this->capacity)
 Matrix::Matrix(int nrLines, int nrCols) {
     //TODO - Implementation
+    if(nrLines<=0 || nrCols<=0){
+        throw exception();
+    }
     this->capacity = 10;
     this->nrElements = 0;
     this->nrLine = nrLines;
@@ -78,9 +81,10 @@ TElem Matrix::element(int i, int j) const {
 
 
 ///Best case: Theta(1)
-///Worst case: Theta(this->nrElements)
-///Average case: Theta(this->nrElements)
-///General case: O(this->nrElements)
+///Worst case: Theta(n)
+///Average case: Theta(n)
+///General case: O(n)
+
 TElem Matrix::modify(int i, int j, TElem e) {
     //TODO - Implementation
     ///Case 1: currentValue = 0 and newValue = 0 -> do nothing
@@ -93,21 +97,20 @@ TElem Matrix::modify(int i, int j, TElem e) {
     if (j < 0 || j >= this->nrCol)
         throw exception();
 
-    Node* newNode =new Node[this->capacity];
+    Node* newNode =new Node[1];
     newNode->info.line=i;
     newNode->info.column=j;
     newNode->info.value=e;
-    if (e != 0) ///We have to modify the value or insert a new one
+    if (e != NULL_TELEM) ///We have to modify the value of a node or insert a new node
     {
         int currentNode = this->root;
         int previousNode = 0;
         while (currentNode != -1) {
-            ///The first if refers to the following case:
-            ///We have to modify the value of the cell
-            if (this->BSTNodes[currentNode].info.line == i && this->BSTNodes[currentNode].info.column == j) {
+            ///We have to modify the value of the node, so we search it
+            if (this->BSTNodes[currentNode].info.line == i && this->BSTNodes[currentNode].info.column == j && this->BSTNodes[currentNode].info.value!=NULL_TELEM) {
                 TElem oldValue = this->BSTNodes[currentNode].info.value;
                 this->BSTNodes[currentNode].info = newNode->info;
-                return oldValue;
+                return oldValue;///we found the node
             }
             if (this->BSTNodes[currentNode].info.line == i && this->BSTNodes[currentNode].info.column < j) {
                 previousNode = currentNode;
@@ -123,8 +126,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
                 currentNode = this->BSTNodes[currentNode].left;
             }
         }
-
-        ///Here we add a new element
+        ///we did not found the node, that means that we add it a new element
         ///Case 1: The binary search tree is empty so the first added node will become the root
         if (this->root == -1) {
             int position = this->allocate();
@@ -135,7 +137,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
             this->BSTNodes[position].info = newNode->info;
             this->root = position;
             this->nrElements++;
-            return 0;
+            return NULL_TELEM;
         }
 
         ///Case 2: In this case we found the node for which we add a new "child"
@@ -150,7 +152,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
             this->BSTNodes[position].info = newNode->info;
             this->BSTNodes[position].parent = previousNode;
             this->nrElements++;
-            return 0;
+            return NULL_TELEM;
         }
             /// It means we have to add the new node as the left child
         else {
@@ -158,7 +160,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
             this->BSTNodes[position].info = newNode->info;
             this->BSTNodes[position].parent = previousNode;
             this->nrElements++;
-            return 0;
+            return NULL_TELEM;
         }
 
     } else///We have to remove the value or do nothing
@@ -186,8 +188,8 @@ TElem Matrix::modify(int i, int j, TElem e) {
 
         ///It means the currentValue from that position is 0 and the new value we want to add is also 0, so we do nothing
         if (currentNode == -1)
-            return 0;
-        /// Calculating the numbr of descendants
+            return NULL_TELEM;
+        /// Calculating the number of descendants
         int numberOfDescendants = 0;
 
         if (this->BSTNodes[currentNodeToBeRemoved].left != -1)
@@ -336,7 +338,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
         int rightChild = this->BSTNodes[currentNodeToBeRemoved].right;
         int replacedNode = this->findMinimum(rightChild);
 
-        ///In this part we only detach the minimum from the tree
+        ///detach the minimum from the tree
 
         ///Case 1: The minimum is a leaf
         ///We check only the right part because, being the minimum, it will always have a child only in the right, if it also had a child in the left, then it wouldn't be the minimum
@@ -345,7 +347,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
             int parent = this->BSTNodes[replacedNode].parent;
 
             ///We mark the parent of the minimum with -1 for now
-            this->BSTNodes[replacedNode].parent = -1;
+            ///this->BSTNodes[replacedNode].parent = -1;
 
             ///We check if the minimum was a left child or a right child for its parent
             if (this->BSTNodes[parent].left == replacedNode) {
@@ -375,7 +377,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
             this->BSTNodes[child].parent = parent;
 
             ///We mark the parent of the minimum with -1 for now
-            this->BSTNodes[replacedNode].parent = -1;
+            ///this->BSTNodes[replacedNode].parent = -1;
 
         }
         TElem oldValue = this->BSTNodes[currentNodeToBeRemoved].info.value;
@@ -433,10 +435,16 @@ void Matrix::resize() {
     this->BSTNodes = new_Tree;
 }
 
-///Theta(1)
+///Best case: Theta(1)
+///Worst case: Theta(n) when we resize
+///Amortized case: Theta(1)
 int Matrix::allocate() {
     if ( this->nrElements == this->capacity)
+    {
         resize();
+        this->firstEmpty = this->nrElements;
+    }
+
     int newElement = this->firstEmpty;
     if(newElement != -1){
         this->firstEmpty = this->BSTNodes[this->firstEmpty].left;
@@ -456,17 +464,65 @@ void Matrix::free_pos(int position) {
 }
 
 ///Best case: Theta(1) -> if the element we searched is exactly the root
-///Worst case: Theta(this->nrOfElements) ->if the element we searched for is not in the tree
-///Average case: Theta(this->nrElements)
-///General case: O(this->nrElements)
-int Matrix::recursiveSearch(int position, TElem value) const{
+///Worst case: Theta(n) ->if the element we searched for is not in the tree
+///Average case: Theta(n)
+///General case: O(n)
+bool Matrix::recursiveSearch(int position, TElem value){
     if(position == -1)
-        return -1;
-    if(this->BSTNodes[position].info.value == value)
-        return position;
-    else if(this->BSTNodes[position].info.value < value)
-        return recursiveSearch(this->BSTNodes[position].right, value);
-    else
-        return recursiveSearch(this->BSTNodes[position].left, value);
+        return false;
+    else{
+        if(this->BSTNodes[position].info.value == value)
+            return true;
+        else if(this->BSTNodes[position].info.value < value)
+            return recursiveSearch(this->BSTNodes[position].right, value);
+        else
+            return recursiveSearch(this->BSTNodes[position].left, value);
+    }
+
 }
+
+///Best case: Theta(1) -> if the two matrixs are diffrent
+///Worst case: Theta(n)
+///Average case: Theta(n)
+///General case: O(n)
+bool Matrix::operator==(Matrix& other) {
+    if (this->nrLine != other.nrLine || this->nrCol != other.nrCol || this->nrElements != other.nrElements) {
+        return false;
+    }
+
+    for (int i = 0; i < this->nrLine; i++) {
+        for (int j = 0; j < this->nrCol; j++) {
+            if (this->element(i, j) != other.element(i, j)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+
+}
+
+/*
+  pre: two Matrix
+  post: boolean Flag
+  Description:  We look if the two matrix are equal.
+                If yes the function returns true, if no, it returns false.
+
+    function operator==(Matrix other)
+        if(matrix.nrLine!=other.nrLine||matrix.nrCol!=other.nrCol||matrix.nrElems!=other.nrElems)
+            return false
+        end if
+        for i=0, i< nrLine,i++ do
+                for j=0, j< this->nrCol,j++ do
+                    if(matrix[i][j]!=other[i][j])
+                        return false
+                    end if
+                end for
+        end for
+  end-function
+
+ */
+
+
+
 

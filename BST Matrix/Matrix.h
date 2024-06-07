@@ -35,7 +35,7 @@ private:
     int allocate();
     void free_pos(int position);
     void resize();
-    int recursiveSearch(int position, TElem value) const;
+    bool recursiveSearch(int position, TElem value) ;
 public:
     //constructor
     Matrix(int nrLines, int nrCols);
@@ -58,4 +58,5 @@ public:
     // destructor
     ~Matrix();
 
+    bool operator==( Matrix& m);
 };
